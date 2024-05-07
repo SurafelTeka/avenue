@@ -4,10 +4,16 @@ import { ReactComponent as Logo } from "../../assets/logo.svg";
 import "./navigation.styles.scss";
 import { UserContext } from "../../contexts/user.context";
 
-const Navigation = () => {
-  const { currentUser } = useContext(UserContext);
-  console.log("my current user ", currentUser);
+import { signOutUser } from "../../utils/firebase/firebase.utils";
 
+const Navigation = () => {
+  const { currentUser, setCurrentUser } = useContext(UserContext);
+  //console.log("my current user ", currentUser);
+
+  const signOutHandler = async () => {
+    await signOutUser();
+    setCurrentUser(null);
+  };
   return (
     <Fragment>
       <div className="navigation">
@@ -20,9 +26,15 @@ const Navigation = () => {
             SHOP
           </Link>
 
-          <Link className="nav-link" to="/auth">
-            SIGN IN
-          </Link>
+          {currentUser ? (
+            <span className="nav-link" onClick={signOutHandler}>
+              SIGN oUT
+            </span>
+          ) : (
+            <Link className="nav-link" to="/auth">
+              SIGN IN
+            </Link>
+          )}
         </div>
       </div>
       <Outlet />
